@@ -9,7 +9,7 @@ import random as rn
 Olist=[] # open list [0,[[]],[[]],0]
 Clist=[] # close list [[]]
 
-'''
+
 # solvable initial board
 Snode=[[5,2,4],
        [1,0,7],
@@ -18,7 +18,7 @@ Snode=[[5,2,4],
 Gnode=[[1,4,7],
        [2,5,8],
        [3,6,0]]
-
+'''
 # unsolvable initial board
 Snode=[[1,2,4],
        [5,0,7],
@@ -45,7 +45,7 @@ Snode=[[8,2,3],
 Gnode=[[1,2,3],
        [8,0,4],
        [7,6,5]]
-'''
+
 # solvable initial board
 Snode=[[0,1,2],
        [3,4,5],
@@ -54,7 +54,7 @@ Snode=[[0,1,2],
 Gnode=[[0,1,2],
        [3,4,5],
        [6,7,8]]
-'''
+
 # unsolvable initial board
 Snode=[[0,1,2],
        [3,4,5],
