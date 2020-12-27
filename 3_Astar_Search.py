@@ -6,10 +6,20 @@
 from copy import deepcopy
 import random as rn
 
-Olist=[] # open list [0,[[]],0]
+Olist=[] # open list [0,[[]],[[]],0]
 Clist=[] # close list [[]]
 
 '''
+# solvable initial board
+Snode=[[5,2,4],
+       [1,0,7],
+       [3,6,8]]
+
+Gnode=[[1,4,7],
+       [2,5,8],
+       [3,6,0]]
+
+# unsolvable initial board
 Snode=[[1,2,4],
        [5,0,7],
        [3,6,8]]
@@ -17,8 +27,18 @@ Snode=[[1,2,4],
 Gnode=[[1,4,7],
        [2,5,8],
        [3,6,0]]
-'''
-Snode=[[2,8,3],
+
+# solvable initial board
+Snode=[[8,3,2],
+       [1,6,4],
+       [7,0,5]]
+
+Gnode=[[1,2,3],
+       [8,0,4],
+       [7,6,5]]
+
+# unsolvable initial board
+Snode=[[8,2,3],
        [1,6,4],
        [7,0,5]]
 
@@ -26,9 +46,19 @@ Gnode=[[1,2,3],
        [8,0,4],
        [7,6,5]]
 '''
-Snode=[[1,4,2],
-       [3,0,6],
-       [7,5,8]]
+# solvable initial board
+Snode=[[0,1,2],
+       [3,4,5],
+       [8,6,7]]
+
+Gnode=[[0,1,2],
+       [3,4,5],
+       [6,7,8]]
+'''
+# unsolvable initial board
+Snode=[[0,1,2],
+       [3,4,5],
+       [6,8,7]]
 
 Gnode=[[0,1,2],
        [3,4,5],
@@ -45,11 +75,12 @@ def evaluate(node):
     return 9-cnt
 
 # 평가함수 결과를 포함하는 노드 생성
-def NodeCreate(node,cnt):
-    Nlist=[0,[],0]
+def NodeCreate(node,parentsnode,cnt):
+    Nlist=[0,[],[],0]
     Nlist[0]=evaluate(node)+cnt
     Nlist[1]=node
-    Nlist[2]=cnt
+    Nlist[2]=parentsnode
+    Nlist[3]=cnt
     return Nlist
 
 # 오픈리스트에 추가(선택된 노드의 자식 노드 추가)
@@ -65,14 +96,14 @@ def closeList(i):
     del Olist[i]
 
 # current 노드 출력
-def NodePrint(node,h,g):
-    print(f"h={h}, g={g}")
+def NodePrint(node,f,g):
+    print(f"h={f-g}, g={g}")
     for i in node:
         print(i)
     print("---------")
 
 # 자식노드 생성
-def babyNode(node):
+def babyNode(node,parentsnode):
     i,j=findzero(node)
     
     leftnode=deepcopy(node)
@@ -122,7 +153,8 @@ def SelectNode():
     return rn.randint(0,i-1)
     #return 0
 
-openList(NodeCreate(Snode,0))
+
+openList(NodeCreate(Snode,[],0))
 
 cnt=0
 while 1:
@@ -131,19 +163,19 @@ while 1:
     print(f"count: {cnt}")
     print(f"selectNode: {i}")
 
-    currentnode=Olist[i][1]  #현재 노드
-    f=Olist[i][0]  # f=h+g
-    g=Olist[i][2]
-    h=f-g
+    currentnode=Olist[i][1]
+    parentsnode=Olist[i][2]
+    f=Olist[i][0]
+    g=Olist[i][3]
     
     closeList(i)
     if currentnode == Gnode:
-        NodePrint(currentnode,h,g)
+        NodePrint(currentnode,f,g)
         print("success!!")
         break
 
-    NodePrint(currentnode,h,g)
-    Bnodes=babyNode(currentnode)
+    NodePrint(currentnode,f,g)
+    Bnodes=babyNode(currentnode,parentsnode)
     for i in Bnodes:
-        openList(NodeCreate(i,g+1))
+        openList(NodeCreate(i,currentnode,g+1))
     Olist=sorted(Olist, key=lambda x:x[0])
