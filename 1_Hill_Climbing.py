@@ -1,3 +1,8 @@
+# Hill Climbing algorithm for 8-puzzle problem
+# Have a great time, Good luck!
+# programming by An deukha
+# email: dplus1016@gyeongui.hs.kr
+
 from copy import deepcopy
 
 # solvable initial board
