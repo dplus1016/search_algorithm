@@ -10,6 +10,16 @@ Olist=[] # open list [0,[[]],0]
 Clist=[] # close list [[]]
 
 
+# solvable initial board
+Snode=[[5,2,4],
+       [1,0,7],
+       [3,6,8]]
+
+Gnode=[[1,4,7],
+       [2,5,8],
+       [3,6,0]]
+'''
+# unsolvable initial board
 Snode=[[1,2,4],
        [5,0,7],
        [3,6,8]]
@@ -17,8 +27,9 @@ Snode=[[1,2,4],
 Gnode=[[1,4,7],
        [2,5,8],
        [3,6,0]]
-'''
-Snode=[[2,8,3],
+
+# solvable initial board
+Snode=[[8,3,2],
        [1,6,4],
        [7,0,5]]
 
@@ -26,9 +37,28 @@ Gnode=[[1,2,3],
        [8,0,4],
        [7,6,5]]
 
-Snode=[[1,4,2],
-       [3,0,6],
-       [7,5,8]]
+# unsolvable initial board
+Snode=[[8,2,3],
+       [1,6,4],
+       [7,0,5]]
+
+Gnode=[[1,2,3],
+       [8,0,4],
+       [7,6,5]]
+
+# solvable initial board
+Snode=[[0,1,2],
+       [3,4,5],
+       [8,6,7]]
+
+Gnode=[[0,1,2],
+       [3,4,5],
+       [6,7,8]]
+
+# unsolvable initial board
+Snode=[[0,1,2],
+       [3,4,5],
+       [6,8,7]]
 
 Gnode=[[0,1,2],
        [3,4,5],
