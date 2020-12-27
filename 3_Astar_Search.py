@@ -6,7 +6,7 @@
 from copy import deepcopy
 import random as rn
 
-Olist=[] # open list [0,[[]],[[]],0]
+Olist=[] # open list [0,[[]],0]
 Clist=[] # close list [[]]
 
 
@@ -48,8 +48,8 @@ Gnode=[[1,2,3],
 
 # solvable initial board
 Snode=[[0,1,2],
-       [3,4,5],
-       [8,6,7]]
+       [3,7,5],
+       [6,8,4]]
 
 Gnode=[[0,1,2],
        [3,4,5],
@@ -75,12 +75,11 @@ def evaluate(node):
     return 9-cnt
 
 # 평가함수 결과를 포함하는 노드 생성
-def NodeCreate(node,parentsnode,cnt):
-    Nlist=[0,[],[],0]
+def NodeCreate(node,cnt):
+    Nlist=[0,[],0]
     Nlist[0]=evaluate(node)+cnt
     Nlist[1]=node
-    Nlist[2]=parentsnode
-    Nlist[3]=cnt
+    Nlist[2]=cnt
     return Nlist
 
 # 오픈리스트에 추가(선택된 노드의 자식 노드 추가)
@@ -103,7 +102,7 @@ def NodePrint(node,f,g):
     print("---------")
 
 # 자식노드 생성
-def babyNode(node,parentsnode):
+def babyNode(node):
     i,j=findzero(node)
     
     leftnode=deepcopy(node)
@@ -154,7 +153,7 @@ def SelectNode():
     #return 0
 
 
-openList(NodeCreate(Snode,[],0))
+openList(NodeCreate(Snode,0))
 
 cnt=0
 while 1:
@@ -164,9 +163,8 @@ while 1:
     print(f"selectNode: {i}")
 
     currentnode=Olist[i][1]
-    parentsnode=Olist[i][2]
     f=Olist[i][0]
-    g=Olist[i][3]
+    g=Olist[i][2]
     
     closeList(i)
     if currentnode == Gnode:
@@ -175,7 +173,7 @@ while 1:
         break
 
     NodePrint(currentnode,f,g)
-    Bnodes=babyNode(currentnode,parentsnode)
+    Bnodes=babyNode(currentnode)
     for i in Bnodes:
-        openList(NodeCreate(i,currentnode,g+1))
+        openList(NodeCreate(i,g+1))
     Olist=sorted(Olist, key=lambda x:x[0])
