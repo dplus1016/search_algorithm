@@ -1,4 +1,7 @@
-#코드 작성중...
+# Best First Search algorithm for 8-puzzle problem by turtle
+# Have a great time, Good luck!
+# programming by An deukha
+# email: dplus1016@gyeongui.hs.kr
 
 import turtle as t
 import time
@@ -6,10 +9,21 @@ import os
 from copy import deepcopy
 import random as rn
 
-Olist=[] # open list [0,[[]],0]
+Olist=[] # open list [0,[[]],0,0,0] [h, node, g, num, p]
 Clist=[] # close list [[]]
+Plist=[] # path list 
+Path=[]
 
 # solvable initial board
+Snode=[[1,2,3],
+       [4,5,8],
+       [6,0,7]]
+
+Gnode=[[1,2,3],
+       [4,5,6],
+       [7,8,0]]
+
+'''
 Snode=[[5,2,4],
        [1,0,7],
        [3,6,8]]
@@ -17,6 +31,45 @@ Snode=[[5,2,4],
 Gnode=[[1,4,7],
        [2,5,8],
        [3,6,0]]
+
+# unsolvable initial board
+Snode=[[1,2,4],
+       [5,0,7],
+       [3,6,8]]
+Gnode=[[1,4,7],
+       [2,5,8],
+       [3,6,0]]
+       
+# solvable initial board
+Snode=[[1,2,3],
+       [4,6,5],
+       [8,7,0]]
+Gnode=[[1,2,3],
+       [4,5,6],
+       [7,8,0]]
+
+# unsolvable initial board
+Snode=[[8,2,3],
+       [1,6,4],
+       [7,0,5]]
+Gnode=[[1,2,3],
+       [8,0,4],
+       [7,6,5]]
+# solvable initial board
+Snode=[[0,1,2],
+       [3,4,5],
+       [8,6,7]]
+Gnode=[[0,1,2],
+       [3,4,5],
+       [6,7,8]]
+# unsolvable initial board
+Snode=[[0,1,2],
+       [3,4,5],
+       [6,8,7]]
+Gnode=[[0,1,2],
+       [3,4,5],
+       [6,7,8]]
+'''
 
 # 휴리스틱 정보(평가함수): 제 자리가 아닌 퍼즐의 숫자
 def evaluate(node):
@@ -28,11 +81,13 @@ def evaluate(node):
     return 9-cnt
 
 # 평가함수 결과를 포함하는 노드 생성
-def NodeCreate(node,cnt):
-    Nlist=[0,[],0]
-    Nlist[0]=evaluate(node)+cnt
+def NodeCreate(node,g,num,p):
+    Nlist=[0,[],0,0,0]
+    Nlist[0]=evaluate(node)
     Nlist[1]=node
-    Nlist[2]=cnt
+    Nlist[2]=g
+    Nlist[3]=num
+    Nlist[4]=p
     return Nlist
 
 # 오픈리스트에 추가(선택된 노드의 자식 노드 추가)
@@ -48,8 +103,8 @@ def closeList(i):
     del Olist[i]
 
 # current 노드 출력
-def NodePrint(node,f,g):
-    print(f"h={f-g}, g={g}")
+def NodePrint(node,h,g,num):
+    print(f"h={h}, g={g}, num={num}")
     for i in node:
         print(i)
     print("---------")
@@ -97,40 +152,62 @@ def chkNode(node):
 
 def SelectNode():
     global Olist
-    tmp=Olist[0][0]
+    tmp=Olist[0][0]  # 평가값이 가장 유망한(낮은) 값
     i=0 
     for O in Olist:
-        if O[0]!=tmp: break
+        if O[0]!=tmp: break  # 평가값이 가장 유망한(낮은) 것들이 복수일 경우
         i+=1
     return rn.randint(0,i-1)
     #return 0
 
-
-openList(NodeCreate(Snode,0))
+openList(NodeCreate(Snode,0,0,0))
+Plist.append([0,Snode,0])
 
 cnt=0
+num=0
 while 1:
     i=SelectNode()
     cnt+=1
     print(f"count: {cnt}")
     print(f"selectNode: {i}")
 
-    currentnode=Olist[i][1]
-    f=Olist[i][0]
+    currentnode=Olist[i][1]  #현재 노드
+    h=Olist[i][0] 
     g=Olist[i][2]
+    p=Olist[i][3]
     
     closeList(i)
+
+    NodePrint(currentnode,h,g,p)
+    
     if currentnode == Gnode:
-        NodePrint(currentnode,f,g)
+        Pnum=p
         print("success!!")
         break
-
-    NodePrint(currentnode,f,g)
+    
     Bnodes=babyNode(currentnode)
     for i in Bnodes:
-        openList(NodeCreate(i,g+1))
+        num+=1
+        openList(NodeCreate(i,g+1,num,p))
+        Plist.append([num,i,p])
     Olist=sorted(Olist, key=lambda x:x[0])
 
+Plist=sorted(Plist, key=lambda x:x[0])
+
+while True:
+    Path.append(Plist[Pnum][1])
+    if not Pnum: break
+    Pnum=Plist[Pnum][2]
+
+print()
+Path.reverse()
+for i in Path: 
+    for j in i: 
+        print(j) 
+    print() 
+
+
+#----------turtle--------------#
 
 t.ht()
 t1=t.Turtle() ; w1=t.Turtle() ; t1.ht() ; w1.ht()
@@ -162,6 +239,33 @@ def rect(x,y,tt,ww,num):
         tt.right(90)
     ww.write(n,False,"center",("",20))
     time.sleep(0.1)
+
+def move(chk, mode):
+    for i in range(1,12): 
+        if chk==1:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t1,w1,chk)
+        elif chk==2:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t2,w2,chk)
+        elif chk==3:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t3,w3,chk)
+        elif chk==4:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t4,w4,chk)
+        elif chk==5:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t5,w5,chk)
+        elif chk==6:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t6,w6,chk)
+        elif chk==7:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t7,w7,chk)
+        elif chk==8:
+            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
+            rect(x[chk],y[chk],t8,w8,chk)
 
 hp=[]
 for i in Snode:
@@ -209,40 +313,24 @@ rect(x[8],y[8],t8,w8,8)
 
 time.sleep(3)
 
-chk=0
-mode=0
-for i in range(1,12): 
-    if chk==1:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t1,w1,chk)
+#chk=0
+#mode=0
 
-    elif chk==2:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t2,w2,chk)
+i,j=findzero(Path[0])
+pos=i*3+j
+for index in range(1,len(Path)): 
+    i,j=findzero(Path[index])
+    tmp=(i*3+j)-pos
+    chk=Path[index-1][i][j]
+    if tmp==3: # 0 아래쪽
+        move(chk,2)
+    elif tmp==-3: # 0 위쪽
+        move(chk,1)
+    elif tmp==1:  # 0 오른쪽
+        move(chk,3)
+    elif tmp==-1: # 0 왼쪽
+        move(chk,4)
 
-    elif chk==3:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t3,w3,chk)
-
-    elif chk==4:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t4,w4,chk)
-
-    elif chk==5:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t5,w5,chk)
-
-    elif chk==6:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t6,w6,chk)
-
-    elif chk==7:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t7,w7,chk)
-
-    elif chk==8:
-        x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-        rect(x[chk],y[chk],t8,w8,chk)
-        
+    pos=(i*3+j)
 
 os.system("Pause")
