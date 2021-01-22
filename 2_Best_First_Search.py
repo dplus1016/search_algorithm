@@ -6,11 +6,21 @@
 from copy import deepcopy
 import random as rn
 
-Olist=[] # open list [0,[[]],0]
+Olist=[] # open list [0,[[]],0,0,0] [h, node, g, num, p]
 Clist=[] # close list [[]]
-
+Plist=[] # path list 
+Path=[]
 
 # solvable initial board
+Snode=[[1,2,3],
+       [4,5,8],
+       [6,0,7]]
+
+Gnode=[[1,2,3],
+       [4,5,6],
+       [7,8,0]]
+
+'''
 Snode=[[5,2,4],
        [1,0,7],
        [3,6,8]]
@@ -18,48 +28,41 @@ Snode=[[5,2,4],
 Gnode=[[1,4,7],
        [2,5,8],
        [3,6,0]]
-'''
+
 # unsolvable initial board
 Snode=[[1,2,4],
        [5,0,7],
        [3,6,8]]
-
 Gnode=[[1,4,7],
        [2,5,8],
        [3,6,0]]
-
+       
 # solvable initial board
-Snode=[[8,3,2],
-       [1,6,4],
-       [7,0,5]]
-
+Snode=[[1,2,3],
+       [4,6,5],
+       [8,7,0]]
 Gnode=[[1,2,3],
-       [8,0,4],
-       [7,6,5]]
+       [4,5,6],
+       [7,8,0]]
 
 # unsolvable initial board
 Snode=[[8,2,3],
        [1,6,4],
        [7,0,5]]
-
 Gnode=[[1,2,3],
        [8,0,4],
        [7,6,5]]
-
 # solvable initial board
 Snode=[[0,1,2],
        [3,4,5],
        [8,6,7]]
-
 Gnode=[[0,1,2],
        [3,4,5],
        [6,7,8]]
-
 # unsolvable initial board
 Snode=[[0,1,2],
        [3,4,5],
        [6,8,7]]
-
 Gnode=[[0,1,2],
        [3,4,5],
        [6,7,8]]
@@ -75,11 +78,13 @@ def evaluate(node):
     return 9-cnt
 
 # 평가함수 결과를 포함하는 노드 생성
-def NodeCreate(node,cnt):
-    Nlist=[0,[],0]
+def NodeCreate(node,g,num,p):
+    Nlist=[0,[],0,0,0]
     Nlist[0]=evaluate(node)
     Nlist[1]=node
-    Nlist[2]=cnt
+    Nlist[2]=g
+    Nlist[3]=num
+    Nlist[4]=p
     return Nlist
 
 # 오픈리스트에 추가(선택된 노드의 자식 노드 추가)
@@ -95,8 +100,8 @@ def closeList(i):
     del Olist[i]
 
 # current 노드 출력
-def NodePrint(node,h,g):
-    print(f"h={h}, g={g}")
+def NodePrint(node,h,g,num):
+    print(f"h={h}, g={g}, num={num}")
     for i in node:
         print(i)
     print("---------")
@@ -144,17 +149,19 @@ def chkNode(node):
 
 def SelectNode():
     global Olist
-    tmp=Olist[0][0]
+    tmp=Olist[0][0]  # 평가값이 가장 유망한(낮은) 값
     i=0 
     for O in Olist:
-        if O[0]!=tmp: break
+        if O[0]!=tmp: break  # 평가값이 가장 유망한(낮은) 것들이 복수일 경우
         i+=1
     return rn.randint(0,i-1)
     #return 0
 
-openList(NodeCreate(Snode,0))
+openList(NodeCreate(Snode,0,0,0))
+Plist.append([0,Snode,0])
 
 cnt=0
+num=0
 while 1:
     i=SelectNode()
     cnt+=1
@@ -164,15 +171,34 @@ while 1:
     currentnode=Olist[i][1]  #현재 노드
     h=Olist[i][0] 
     g=Olist[i][2]
+    p=Olist[i][3]
     
     closeList(i)
+
+    NodePrint(currentnode,h,g,p)
+    
     if currentnode == Gnode:
-        NodePrint(currentnode,h,g)
+        Pnum=p
         print("success!!")
         break
-
-    NodePrint(currentnode,h,g)
+    
     Bnodes=babyNode(currentnode)
     for i in Bnodes:
-        openList(NodeCreate(i,g+1))
+        num+=1
+        openList(NodeCreate(i,g+1,num,p))
+        Plist.append([num,i,p])
     Olist=sorted(Olist, key=lambda x:x[0])
+
+Plist=sorted(Plist, key=lambda x:x[0])
+
+while True:
+    Path.append(Plist[Pnum][1])
+    if not Pnum: break
+    Pnum=Plist[Pnum][2]
+
+print()
+Path.reverse()
+for i in Path: 
+    for j in i: 
+        print(j) 
+    print() 
