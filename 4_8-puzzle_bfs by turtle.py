@@ -169,15 +169,13 @@ for i in Path:
 
 #----------turtle--------------#
 
-t.ht()
-t1=t.Turtle() ; w1=t.Turtle() ; t1.ht() ; w1.ht()
-t2=t.Turtle() ; w2=t.Turtle() ; t2.ht() ; w2.ht() 
-t3=t.Turtle() ; w3=t.Turtle() ; t3.ht() ; w3.ht() 
-t4=t.Turtle() ; w4=t.Turtle() ; t4.ht() ; w4.ht() 
-t5=t.Turtle() ; w5=t.Turtle() ; t5.ht() ; w5.ht()
-t6=t.Turtle() ; w6=t.Turtle() ; t6.ht() ; w6.ht() 
-t7=t.Turtle() ; w7=t.Turtle() ; t7.ht() ; w7.ht() 
-t8=t.Turtle() ; w8=t.Turtle() ; t8.ht() ; w8.ht() 
+T=[]
+W=[]
+for i in range(9):
+    T.append(t.Turtle())
+    W.append(t.Turtle())
+    T[i].ht()
+    W[i].ht()
 
 d=100
 c=10
@@ -200,32 +198,11 @@ def rect(x,y,tt,ww,num):
     ww.write(n,False,"center",("",20))
     time.sleep(0.1)
 
-def move(chk, mode):
-    for i in range(1,12): 
-        if chk==1:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t1,w1,chk)
-        elif chk==2:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t2,w2,chk)
-        elif chk==3:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t3,w3,chk)
-        elif chk==4:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t4,w4,chk)
-        elif chk==5:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t5,w5,chk)
-        elif chk==6:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t6,w6,chk)
-        elif chk==7:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t7,w7,chk)
-        elif chk==8:
-            x[chk]=x[chk] + (20*(mode//2)-30)*(mode//3) ; y[chk]=y[chk] + (20*mode-30)*(1-mode//3) 
-            rect(x[chk],y[chk],t8,w8,chk)
+def move(i, mode):
+    for j in range(1,12): 
+        x[i]=x[i] + (20*(mode//2)-30)*(mode//3)
+        y[i]=y[i] + (20*mode-30)*(1-mode//3) 
+        rect(x[i],y[i],T[i],W[i],i)
 
 hp=[]
 for i in Snode:
@@ -235,43 +212,17 @@ for i in Snode:
 x=[0]*10
 y=[0]*10
 
-tmp=hp.index(1)
-x[1]=x_i+(d+c)*(tmp%3) ; y[1]=y_i-(d+c)*(tmp//3)
-rect(x[1],y[1],t1,w1,1)
-
-tmp=hp.index(2)
-x[2]=x_i+(d+c)*(tmp%3) ; y[2]=y_i-(d+c)*(tmp//3)
-rect(x[2],y[2],t2,w2,2)
-
-tmp=hp.index(3)
-x[3]=x_i+(d+c)*(tmp%3) ; y[3]=y_i-(d+c)*(tmp//3)
-rect(x[3],y[3],t3,w3,3)
-
-tmp=hp.index(4)
-x[4]=x_i+(d+c)*(tmp%3) ; y[4]=y_i-(d+c)*(tmp//3)
-rect(x[4],y[4],t4,w4,4)
-
-tmp=hp.index(5)
-x[5]=x_i+(d+c)*(tmp%3) ; y[5]=y_i-(d+c)*(tmp//3)
-rect(x[5],y[5],t5,w5,5)
-
-tmp=hp.index(6)
-x[6]=x_i+(d+c)*(tmp%3) ; y[6]=y_i-(d+c)*(tmp//3)
-rect(x[6],y[6],t6,w6,6)
-
-tmp=hp.index(7)
-x[7]=x_i+(d+c)*(tmp%3) ; y[7]=y_i-(d+c)*(tmp//3)
-rect(x[7],y[7],t7,w7,7)
-
-tmp=hp.index(8)
-x[8]=x_i+(d+c)*(tmp%3) ; y[8]=y_i-(d+c)*(tmp//3)
-rect(x[8],y[8],t8,w8,8)
+for i in range(1,9):
+    tmp=hp.index(i)
+    x[i]=x_i+(d+c)*(tmp%3)
+    y[i]=y_i-(d+c)*(tmp//3)
+    rect(x[i],y[i],T[i],W[i],i)
 
 #   2    1=y-10 ; 2=y+10   x + (20*(mode//2)-30)*(mode//3) ; y + (20*mode-30)*(1-mode//3) 
 # 3   4  3=x-10 ; 4=x+10                           
 #   1    
 
-time.sleep(3)
+time.sleep(2)
 
 #chk=0
 #mode=0
