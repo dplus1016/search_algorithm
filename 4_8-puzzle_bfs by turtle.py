@@ -183,15 +183,8 @@ x_i=-(d*3+c*2)/2; y_i=(d*3+c*2)/2
 
 def rect(x,y,tt,ww,num): 
     n=str(num)
-    ww.clear()
-    ww.speed(0)
-    ww.penup()
-    ww.goto(x+d/2, y-d/2-10)
-    tt.clear()
-    tt.speed(0)
-    tt.penup()
-    tt.goto(x,y)
-    tt.pendown()
+    ww.clear(); ww.speed(0); ww.penup(); ww.goto(x+d/2, y-d/2-10)
+    tt.clear(); tt.speed(0); tt.penup(); tt.goto(x,y); tt.pendown()
     for i in range(4):
         tt.fd(d)
         tt.right(90)
