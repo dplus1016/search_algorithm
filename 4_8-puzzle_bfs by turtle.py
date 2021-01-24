@@ -218,8 +218,8 @@ for i in range(1,9):
     y[i]=y_i-(d+c)*(tmp//3)
     rect(x[i],y[i],T[i],W[i],i)
 
-#   2    1=y-10 ; 2=y+10   x + (20*(mode//2)-30)*(mode//3) ; y + (20*mode-30)*(1-mode//3) 
-# 3   4  3=x-10 ; 4=x+10                           
+#   2    1=y-10 ; 2=y+10  y + (20*mode-30)*(1-mode//3) 
+# 3   4  3=x-10 ; 4=x+10  x + (20*(mode//2)-30)*(mode//3)                          
 #   1    
 
 time.sleep(2)
