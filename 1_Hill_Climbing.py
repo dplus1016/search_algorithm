@@ -90,10 +90,10 @@ while True:
     for i in Bnodes:
         tmp_h=evaluate(i)  # 자식 노드의 평가 함수 값
         if min_h>tmp_h:    # 자식 노드의 평가 함수 값 중에서 현재 노드의 평가 함수 값보다 작은 값 검색
-            min_h=tmp_h
+            min_h=tmp_h    # 가장 유망한 자식 노드는 tmp_node에 저장
             tmp_node=i
     if currentnode == tmp_node:  # 유망한 노드를 찾지 못한 경우 탐색 종료
         print("failure!!")
         break
 
-    currentnode = tmp_node
+    currentnode = tmp_node  # 가장 유망한 자식 노드를 현재 노드로 지정
